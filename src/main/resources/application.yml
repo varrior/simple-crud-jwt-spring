@@ -1,0 +1,26 @@
+server:
+  servlet:
+    context-path: /
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  devtools:
+    restart:
+      enabled: true
+
+jwt:
+  header: Authorization
+  base64-secret: UHJvZ3JhbW93YW5pZWliYXp5ZGFueWNocG9saXRlY2huaWthZ2RhbnNrYXJva2FrYWRlbWlja2kyMDIwLzIwMjEgDQo=
+  token-validity-in-seconds: 86400
+  token-validity-in-seconds-for-remember-me: 108000
+  route:
+    authentication:
+      path: auth
+      refresh: refresh
+
+logging:
+  level:
+    pl.edu.gda.simple_crud_app.security: DEBUG
