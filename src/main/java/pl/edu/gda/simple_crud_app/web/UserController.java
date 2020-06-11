@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import pl.edu.gda.simple_crud_app.security.model.User;
 import pl.edu.gda.simple_crud_app.service.UserService;
 
@@ -28,6 +29,13 @@ import java.util.Map;
 public class UserController {
     @Autowired
     public UserService userService;
+
+    @GetMapping("*")
+    public ModelAndView defaultPage(Map<String, Object> model){
+        System.out.println("Kaszanka");
+
+        return new ModelAndView("index", model);
+    }
 
     @GetMapping("/list/{id}")
     @ResponseBody
@@ -88,14 +96,18 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Object> getActualUser(){
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("success", true);
-        response.put("id", userService.getUserWithAuthorities().get().getId());
-        response.put("email", userService.getUserWithAuthorities().get().getEmail());
-        response.put("permission", userService.getUserWithAuthorities().get().getPermission());
-        response.put("username", userService.getUserWithAuthorities().get().getUsername());
-        response.put("firstName", userService.getUserWithAuthorities().get().getFirstName());
-        response.put("lastName", userService.getUserWithAuthorities().get().getLastName());
-
+        if(userService.getUserWithAuthorities().isPresent()){
+            response.put("success", true);
+            response.put("id", userService.getUserWithAuthorities().get().getId());
+            response.put("email", userService.getUserWithAuthorities().get().getEmail());
+            response.put("permission", userService.getUserWithAuthorities().get().getPermission());
+            response.put("username", userService.getUserWithAuthorities().get().getUsername());
+            response.put("firstName", userService.getUserWithAuthorities().get().getFirstName());
+            response.put("lastName", userService.getUserWithAuthorities().get().getLastName());
+        } else {
+            response.put("success", false);
+            response.put("message", "User not found");
+        }
         return ResponseEntity.ok(response);
     }
     @PutMapping("/update/{id}")

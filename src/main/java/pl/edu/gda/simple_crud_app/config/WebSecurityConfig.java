@@ -48,7 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/favicon.ico",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js"
+                        "/**/*.js",
+                        "/**/*.json",
+                        "/**/*.png",
+                        "/**/*.map",
+                        "/**/*.svg"
                 );
     }
     @Override
@@ -69,6 +73,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+
+                .antMatchers("/**").permitAll()
+                .antMatchers("/api/**").authenticated()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/user").permitAll()
                 .antMatchers("/api/user/checkusername").permitAll()
@@ -79,6 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .apply(securityConfigurerAdapter());
     }
+
 
     private JWTConfigurer securityConfigurerAdapter(){
         return new JWTConfigurer(tokenProvider);
